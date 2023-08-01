@@ -3,24 +3,31 @@ from playwright.sync_api import sync_playwright
 
 
 def pytest_addoption(parser):
-    parser.addoption('--driver', action='store', default='chrome')
+    parser.addoption('--browserr', action='store', default='chrome')
     parser.addoption('--headless', action='store', default=False)
 
 
 @pytest.fixture
-def driver(request):
-    driver_name = request.config.getoption('--driver')
+def browser(request):
+    global browser
 
-    with sync_playwright() as p:
-        if driver_name == 'chrome':
-            driver = p.chromium.launch(headless=request.config.getoption('--headless'))
+    browser_name = request.config.getoption('--browserr')
 
-        if driver_name == 'firefox':
-            driver = p.firefox.launch(headless=request.config.getoption('--headless'))
+    play = sync_playwright().start()
 
-        if driver_name == 'webkit':
-            driver = p.webkit.launch(headless=request.config.getoption('--headless'))
+    if browser_name == 'chrome':
+        browser = play.chromium.launch(headless=request.config.getoption('--headless'))
 
-        yield driver
+    elif browser_name == 'firefox':
+        browser = play.firefox.launch(headless=request.config.getoption('--headless'))
 
-        driver.close()
+    elif browser_name == 'webkit':
+        browser = play.webkit.launch(headless=request.config.getoption('--headless'))
+
+    else:
+        print(f"{browser_name} browser is not available!")
+
+    yield browser
+
+    browser.close()
+    play.stop()
