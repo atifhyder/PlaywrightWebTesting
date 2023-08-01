@@ -4,7 +4,7 @@ from playwright.sync_api import sync_playwright
 
 def pytest_addoption(parser):
     parser.addoption('--browserr', action='store', default='chrome')
-    parser.addoption('--headless', action='store', default=False)
+    parser.addoption('--headless', action='store', type=bool, default=False)
 
 
 @pytest.fixture
