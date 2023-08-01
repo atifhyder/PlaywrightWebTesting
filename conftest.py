@@ -7,8 +7,9 @@ def pytest_addoption(parser):
     parser.addoption('--headless', action='store', type=bool, default=False)
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def browser(request):
+    print('browser is generating again and again ________________________________________')
     global browser
 
     browser_name = request.config.getoption('--browserr')
