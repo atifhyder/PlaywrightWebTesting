@@ -9,7 +9,7 @@ def pytest_addoption(parser):
 
 @pytest.fixture(scope='session')
 def browser(request):
-    print('browser is generating again and again ________________________________________')
+    print('browser initiated ________________________________________')
     global browser
 
     browser_name = request.config.getoption('--browserr')
@@ -30,5 +30,6 @@ def browser(request):
 
     yield browser
 
+    print('browser destroyed ________________________________________')
     browser.close()
     play.stop()
